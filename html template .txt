@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malawi Elections 2025 - Live Votes & Updates</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Malawi Elections 2025 - Live Votes & Updates</h1>
+        <p>Today's Tripartite General Elections | September 16, 2025</p>
+    </header>
+
+    <div class="container">
+        <!-- Countdown Timer -->
+        <div class="countdown">
+            Polls Close In: <span>{{ countdown }}</span>
+        </div>
+
+        <!-- Votes Overview Section -->
+        <section class="votes-section">
+            {% for vote in votes %}
+            <div class="vote-card">
+                <h3>{{ vote.candidate }}</h3>
+                <p>{{ vote.percentage }} (Projected)</p>
+            </div>
+            {% endfor %}
+        </section>
+
+        <!-- Upload Section -->
+        <section class="upload-section">
+            <h2>Upload News Updates</h2>
+            <p>Share videos or images from polling stations.</p>
+            <form method="post" enctype="multipart/form-data" action="{{ url_for('upload') }}">
+                <input type="file" name="mediaFile" accept="image/*,video/*" multiple>
+                <br>
+                <input type="text" name="caption" placeholder="Add a caption (e.g., 'Queue at Lilongwe Station')">
+                <br>
+                <button type="submit">Upload & Share</button>
+            </form>
+        </section>
+
+        <!-- Updates Feed -->
+        <section class="updates-feed">
+            <h2>Live Updates Feed</h2>
+            <div id="feed">
+                {% for update in updates %}
+                <div class="update-item">
+                    <p><strong>{{ update.time }}:</strong> {{ update.content }}</p>
+                    {% if update.media %}
+                        {% if update.media.endswith(('.png', '.jpg', '.jpeg')) %}
+                            <img src="{{ url_for('static', filename=update.media) }}" class="media-preview" alt="Uploaded Image">
+                        {% else %}
+                            <video src="{{ url_for('static', filename=update.media) }}" class="media-preview" controls></video>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+</body>
+</html>
